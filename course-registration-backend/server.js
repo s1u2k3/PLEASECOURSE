@@ -1,9 +1,12 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+const connectDB = require("./config/db");
 
 const app = express();
+
+// DB
+connectDB();
 
 // Middleware
 app.use(cors());
@@ -16,14 +19,13 @@ app.use("/api/courses", require("./routes/courseRoutes"));
 app.use("/api/enroll", require("./routes/enrollmentRoutes"));
 app.use("/api/news", require("./routes/newsRoutes"));
 
-// MongoDB
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error(err));
+// ✅ ROOT ROUTE (FIX)
+app.get("/", (req, res) => {
+  res.send("Backend API is running 🚀");
+});
 
-// Server
+// Port
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
